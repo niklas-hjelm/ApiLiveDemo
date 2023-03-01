@@ -1,0 +1,25 @@
+﻿@page "/chat"
+@using Microsoft.AspNetCore.Authorization
+
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize]
+
+<h3>Chat</h3>
+
+<EditForm Model="CurrentMessage" OnSubmit="SendMessage">
+    <div class="form-control">
+        <label>Message</label>
+        <InputTextArea @bind-Value="CurrentMessage.Message"></InputTextArea>
+    </div>
+    <button class="btn btn-primary">Send</button>
+</EditForm>
+<ul class="container list-unstyled">
+    <Virtualize Items="Messages.OrderByDescending(m=>m.Timestamp).ToArray()" Context="message">
+        <li class="p-2 mb-1">
+            <label class="lh-sm"> <span class="oi oi-person"></span>@message.Name - @message.Timestamp.Value.ToLocalTime().ToString("HH:mm")</label>
+            <h4 class="pinkaroo text-light rounded-3 p-2 mb-1">@message.Message</h4>
+        </li>
+    </Virtualize>
+</ul>
